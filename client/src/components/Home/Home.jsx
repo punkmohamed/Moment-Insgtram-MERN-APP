@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Container, Grow, Grid, AppBar, TextField, Button, Paper } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import ChipInput from 'material-ui-chip-input';
 
 import { getPostsBySearch } from '../../actions/posts';
 import Posts from '../Posts/Posts';
