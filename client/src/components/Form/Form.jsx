@@ -47,7 +47,8 @@ const Form = ({ currentId, setCurrentId }) => {
   }
 
   // const handleAddChip = (tag) => {
-  //   setPostData({ ...postData, tags: [...postData.tags, tag] });
+  //   setPostData({ ...postData, tags: [...postData.tags, tag] })
+
   // };
 
   // const handleDeleteChip = (chipToDelete) => {
