@@ -33,7 +33,7 @@ export const signin = async (req, res) => {
 
 export const signup = async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
-
+  res.send('Hello from Vercel letsignup!')
   try {
     const oldUser = await UserModal.findOne({ email });
 
