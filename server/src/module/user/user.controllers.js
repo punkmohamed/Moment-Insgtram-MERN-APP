@@ -10,7 +10,10 @@ dotenv.config();
 // Retrieve the MongoDB URI from the environment variables
 const code = process.env.JWT_SECRET;
 const secret = code;
-
+export const getUser = async (req, res) => {
+  const users = await UserModel.find()
+  res.send('Hello from Vercel letsignup!')
+}
 export const signin = async (req, res) => {
   const { email, password } = req.body;
 
@@ -29,11 +32,11 @@ export const signin = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Something went wrong" });
   }
-};
+}
 
 export const signup = async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
-  res.send('Hello from Vercel letsignup!')
+
   try {
     const oldUser = await UserModal.findOne({ email });
 
