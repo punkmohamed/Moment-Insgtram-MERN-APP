@@ -21,6 +21,6 @@ app.use("/user", userRouter);
 db
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
-app.get('/test', (req, res) => {
+app.get('/', (req, res) => {
     res.send('Hello from Vercel!');
 });
