@@ -22,5 +22,5 @@ db
 
 app.listen(3000, () => console.log(`Example app listening on port ${port}!`))
 app.get('/', (req, res) => {
-    res.send('Hello from Vercel lets see then!');
+    res.send('Hello from Vercel lets see then22!');
 });
