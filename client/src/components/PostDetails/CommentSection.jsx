@@ -1,16 +1,14 @@
-import React, { useState, useRef } from 'react';
-import { Typography, TextField, Button } from '@mui/material';
+import { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { commentPost } from '../../actions/posts';
-import useStyles from './styles';
+import './styles.css';
 
 const CommentSection = ({ post }) => {
   const user = JSON.parse(localStorage.getItem('profile'));
   const [comment, setComment] = useState('');
   const dispatch = useDispatch();
   const [comments, setComments] = useState(post?.comments);
-  const classes = useStyles();
   const commentsRef = useRef();
 
   const handleComment = async () => {
@@ -23,25 +21,36 @@ const CommentSection = ({ post }) => {
   };
 
   return (
-    <div>
-      <div className={classes.commentsOuterContainer}>
-        <div className={classes.commentsInnerContainer}>
-          <Typography gutterBottom variant="h6">Comments</Typography>
-          {comments?.map((c, i) => (
-            <Typography key={i} gutterBottom variant="subtitle1">
-              <strong>{c.split(': ')[0]}</strong>
-              {c.split(':')[1]}
-            </Typography>
-          ))}
-          <div ref={commentsRef} />
+    <div className="py-4 px-6">
+      <div className="flex flex-col">
+        <div className="mb-4">
+          <h2 className="text-xl font-semibold mb-2">Comments</h2>
+          <div className="space-y-2">
+            {comments?.map((c, i) => (
+              <div key={i} className="text-base">
+                <strong className="mr-1">{c.split(': ')[0]}</strong>
+                {c.split(': ')[1]}
+              </div>
+            ))}
+            <div ref={commentsRef} />
+          </div>
         </div>
-        <div style={{ width: '70%' }}>
-          <Typography gutterBottom variant="h6">Write a comment</Typography>
-          <TextField fullWidth rows={4} variant="outlined" label="Comment" multiline value={comment} onChange={(e) => setComment(e.target.value)} />
-          <br />
-          <Button style={{ marginTop: '10px' }} fullWidth disabled={!comment.length} color="primary" variant="contained" onClick={handleComment}>
+        <div className="w-full">
+          <h2 className="text-xl font-semibold mb-2">Write a comment</h2>
+          <textarea
+            className="w-full p-2 border border-gray-300 rounded-lg"
+            rows="4"
+            placeholder="Comment"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+          <button
+            className={`mt-2 w-full py-2 px-4 text-white rounded-lg ${comment.length ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'}`}
+            disabled={!comment.length}
+            onClick={handleComment}
+          >
             Comment
-          </Button>
+          </button>
         </div>
       </div>
     </div>

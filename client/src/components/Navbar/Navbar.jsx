@@ -1,21 +1,17 @@
 import { useState, useEffect } from 'react';
-import { AppBar, Typography, Toolbar, Avatar, Button } from '@mui/material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-
-
 import { jwtDecode } from 'jwt-decode';
 import memoriesLogo from '../../images/memoriesLogo.png';
 import memoriesText from '../../images/memoriesText.png';
 import * as actionType from '../../constants/actionTypes';
-import useStyles from './styles';
+import './styles.css';
 
 const Navbar = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
   const dispatch = useDispatch();
   const location = useLocation();
   const history = useNavigate();
-  const classes = useStyles();
 
   const logout = () => {
     dispatch({ type: actionType.LOGOUT });
@@ -39,27 +35,46 @@ const Navbar = () => {
       }
       setUser(JSON.parse(localStorage.getItem('profile')));
     }, 500);
-    return () => clearTimeout(tokenCheckTimeout)
+    return () => clearTimeout(tokenCheckTimeout);
   }, [location]);
 
   return (
-    <AppBar className={classes.appBar} position="static" color="inherit">
-      <Link to="/" className={classes.brandContainer}>
-        <img component={Link} to="/" src={memoriesText} alt="icon" height="45px" />
-        <img className={classes.image} src={memoriesLogo} alt="icon" height="40px" />
-      </Link>
-      <Toolbar className={classes.toolbar}>
-        {user?.result ? (
-          <div className={classes.profile}>
-            <Avatar className={classes.purple} alt={user?.result.name} src={user?.result.imageUrl}>{user?.result.name.charAt(0)}</Avatar>
-            <Typography className={classes.userName} variant="h6">{user?.result.name}</Typography>
-            <Button variant="contained" className={classes.logout} color="secondary" onClick={logout}>Logout</Button>
-          </div>
-        ) : (
-          <Button component={Link} to="/auth" variant="contained" color="primary">Sign In</Button>
-        )}
-      </Toolbar>
-    </AppBar>
+    <header className="bg-white shadow-md">
+      <nav className="flex items-center justify-between p-4">
+        <Link to="/" className="flex items-center">
+          <img src={memoriesText} alt="Memories Text" className="h-11 mr-2" />
+          <img src={memoriesLogo} alt="Memories Logo" className="h-10" />
+        </Link>
+        <div className="flex items-center">
+          {user?.result ? (
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center">
+                <img
+                  src={user?.result.imageUrl}
+                  alt={user?.result.name}
+                  className="w-10 h-10 rounded-full bg-purple-500 text-white flex items-center justify-center text-xl font-semibold"
+                >
+                  {user?.result.name.charAt(0)}
+                </img>
+                <span className="ml-2 text-lg font-semibold">{user?.result.name}</span>
+              </div>
+              <button
+                className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+                onClick={logout}
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/auth">
+              <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                Sign In
+              </button>
+            </Link>
+          )}
+        </div>
+      </nav>
+    </header>
   );
 };
 

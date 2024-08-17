@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Avatar, Button, Paper, Grid, Typography, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { GoogleLogin } from "@react-oauth/google";
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Icon from './icon';
+import { GoogleLogin } from '@react-oauth/google';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLock, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { signin, signup } from '../../actions/auth';
 import { AUTH } from '../../constants/actionTypes';
-import useStyles from './styles';
-import Input from './Input';
 import { jwtDecode } from 'jwt-decode';
+import './styles.css'; // Import the CSS file
+
 const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' };
 
 const SignUp = () => {
@@ -17,20 +16,18 @@ const SignUp = () => {
   const [isSignup, setIsSignup] = useState(false);
   const dispatch = useDispatch();
   const history = useNavigate();
-  const classes = useStyles();
 
   const [showPassword, setShowPassword] = useState(false);
   const handleShowPassword = () => setShowPassword(!showPassword);
 
   const switchMode = () => {
     setForm(initialState);
-    setIsSignup((prevIsSignup) => !prevIsSignup);
+    setIsSignup(prevIsSignup => !prevIsSignup);
     setShowPassword(false);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (isSignup) {
       dispatch(signup(form, history));
     } else {
@@ -38,14 +35,10 @@ const SignUp = () => {
     }
   };
 
-
-
   const googleSuccess = async (res) => {
-    console.log('twqqwtqw', res)
     const token = res?.credential;
-    const code = res?.credential;
-    const decodedToken = jwtDecode(code);
-    const result = decodedToken
+    const decodedToken = jwtDecode(token);
+    const result = decodedToken;
     try {
       dispatch({ type: AUTH, data: { result, token } });
       history('/');
@@ -59,47 +52,115 @@ const SignUp = () => {
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Paper className={classes.paper} elevation={6}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">{isSignup ? 'Sign up' : 'Sign in'}</Typography>
-        <form className={classes.form} onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <div className="flex justify-center mb-4">
+          <FontAwesomeIcon icon={faLock} className="h-12 w-12 text-blue-500" />
+        </div>
+        <h1 className="text-2xl font-bold text-center mb-6">{isSignup ? 'Sign up' : 'Sign in'}</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-4">
             {isSignup && (
               <>
-                <Input name="firstName" label="First Name" handleChange={handleChange} autoFocus half />
-                <Input name="lastName" label="Last Name" handleChange={handleChange} half />
+                <div className="flex flex-col">
+                  <label className="text-gray-700">First Name</label>
+                  <input
+                    name="firstName"
+                    onChange={handleChange}
+                    placeholder="First Name"
+                    className="p-2 border rounded-md"
+                    autoFocus
+                    type="text"
+                    value={form.firstName}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="text-gray-700">Last Name</label>
+                  <input
+                    name="lastName"
+                    onChange={handleChange}
+                    placeholder="Last Name"
+                    className="p-2 border rounded-md"
+                    type="text"
+                    value={form.lastName}
+                  />
+                </div>
               </>
             )}
-            <Input name="email" label="Email Address" handleChange={handleChange} type="email" />
-            <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? 'text' : 'password'} handleShowPassword={handleShowPassword} />
-            {isSignup && <Input name="confirmPassword" label="Repeat Password" handleChange={handleChange} type="password" />}
-          </Grid>
-          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+            <div className="flex flex-col">
+              <label className="text-gray-700">Email Address</label>
+              <input
+                name="email"
+                onChange={handleChange}
+                placeholder="Email Address"
+                className="p-2 border rounded-md"
+                type="email"
+                value={form.email}
+              />
+            </div>
+            <div className="relative flex flex-col">
+              <label className="text-gray-700">Password</label>
+              <input
+                name="password"
+                onChange={handleChange}
+                placeholder="Password"
+                className="p-2 border rounded-md"
+                type={showPassword ? 'text' : 'password'}
+                value={form.password}
+              />
+              <button
+                type="button"
+                onClick={handleShowPassword}
+                className="absolute inset-y-0 right-0 flex items-center pr-3"
+              >
+                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+            {isSignup && (
+              <div className="flex flex-col">
+                <label className="text-gray-700">Repeat Password</label>
+                <input
+                  name="confirmPassword"
+                  onChange={handleChange}
+                  placeholder="Repeat Password"
+                  className="p-2 border rounded-md"
+                  type="password"
+                  value={form.confirmPassword}
+                />
+              </div>
+            )}
+          </div>
+          <button
+            type="submit"
+            className="w-full mt-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          >
             {isSignup ? 'Sign Up' : 'Sign In'}
-          </Button>
+          </button>
           <GoogleLogin
             render={(renderProps) => (
-              <Button className={classes.googleButton} color="primary" fullWidth onClick={renderProps.onClick} disabled={renderProps.disabled} startIcon={<Icon />} variant="contained">
+              <button
+                className="w-full mt-4 py-2 bg-red-500 text-white rounded-md flex items-center justify-center"
+                onClick={renderProps.onClick}
+                disabled={renderProps.disabled}
+              >
                 Google Sign In
-              </Button>
+              </button>
             )}
             onSuccess={googleSuccess}
             onError={googleError}
             cookiePolicy="single_host_origin"
           />
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Button onClick={switchMode}>
-                {isSignup ? 'Already have an account? Sign in' : "Don't have an account? Sign Up"}
-              </Button>
-            </Grid>
-          </Grid>
+          <div className="flex justify-end mt-4">
+            <button
+              onClick={switchMode}
+              className="text-blue-500 hover:underline"
+            >
+              {isSignup ? 'Already have an account? Sign in' : "Don't have an account? Sign Up"}
+            </button>
+          </div>
         </form>
-      </Paper>
-    </Container>
+      </div>
+    </div>
   );
 };
 

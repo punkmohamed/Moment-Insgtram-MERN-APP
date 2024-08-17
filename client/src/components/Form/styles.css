@@ -1,0 +1,28 @@
+.root .MuiTextField-root {
+  margin: 8px; /* Adjust based on spacing requirements */
+}
+
+.paper {
+  padding: 16px; /* Adjust based on spacing requirements */
+  margin-top: 24px; /* Space between top */
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.fileInput {
+  width: 97%;
+  margin: 10px 0;
+}
+
+.buttonSubmit {
+  margin-bottom: 10px;
+}
+
+.buttonClear {
+  background-color: red; /* Adjust for your theme's error color */
+  color: #fff;
+}

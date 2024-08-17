@@ -1,32 +1,27 @@
 import { useState } from 'react';
-import { Container, Grow, Grid, AppBar, TextField, Button, Paper } from '@mui/material';
-import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-
 import { getPostsBySearch } from '../../actions/posts';
 import Posts from '../Posts/Posts';
 import Form from '../Form/Form';
 import Pagination from '../Pagination';
-import useStyles from './styles';
+import './styles.css';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
+
 const Home = () => {
-  const classes = useStyles();
   const query = useQuery();
   const page = query.get('page') || 1;
   const searchQuery = query.get('searchQuery');
 
   const [currentId, setCurrentId] = useState(0);
-  const dispatch = useDispatch();
-
   const [search, setSearch] = useState('');
   const [tags, setTags] = useState([]);
   const history = useNavigate();
 
   const searchPost = () => {
-    if (search.trim() || tags) {
+    if (search.trim() || tags.length) {
       dispatch(getPostsBySearch({ search, tags: tags.join(',') }));
       history(`/posts/search?searchQuery=${search || 'none'}&tags=${tags.join(',')}`);
     } else {
@@ -40,42 +35,39 @@ const Home = () => {
     }
   };
 
-  // const handleAddChip = (tag) => setTags([...tags, tag]);
-
-  // const handleDeleteChip = (chipToDelete) => setTags(tags.filter((tag) => tag !== chipToDelete));
-
   return (
-    <Grow in>
-      <Container maxWidth="xl">
-        <Grid container justify="space-between" alignItems="stretch" spacing={3} className={classes.gridContainer}>
-          <Grid item xs={12} sm={6} md={9}>
-            <Posts setCurrentId={setCurrentId} />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <AppBar className={classes.appBarSearch} position="static" color="inherit">
-              <TextField onKeyDown={handleKeyPress} name="search" variant="outlined" label="Search Memories" fullWidth value={search} onChange={(e) => setSearch(e.target.value)} />
-              {/* <ChipInput
-                style={{ margin: '10px 0' }}
-                value={tags}
-                onAdd={(chip) => handleAddChip(chip)}
-                onDelete={(chip) => handleDeleteChip(chip)}
-                label="Search Tags"
-                variant="outlined"
-              /> */}
-              <div style={{ marginTop: '15px' }}>
-                <Button onClick={searchPost} className={classes.searchButton} variant="contained" color="primary">Search</Button>
-              </div>
-            </AppBar>
-            <Form currentId={currentId} setCurrentId={setCurrentId} />
-            {(!searchQuery && !tags.length) && (
-              <Paper className={classes.pagination} elevation={6}>
-                <Pagination page={page} />
-              </Paper>
-            )}
-          </Grid>
-        </Grid>
-      </Container>
-    </Grow>
+    <div className="min-h-screen bg-gray-100 p-4">
+      <div className="container mx-auto flex flex-wrap">
+        <div className="w-full md:w-2/3 lg:w-3/4 p-4">
+          <Posts setCurrentId={setCurrentId} />
+        </div>
+        <div className="w-full md:w-1/3 lg:w-1/4 p-4">
+          <div className="bg-white shadow-md rounded-lg p-4">
+            <input
+              type="text"
+              name="search"
+              placeholder="Search Memories"
+              className="w-full p-2 border rounded-lg mb-4"
+              onKeyDown={handleKeyPress}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button
+              onClick={searchPost}
+              className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+            >
+              Search
+            </button>
+          </div>
+          <Form currentId={currentId} setCurrentId={setCurrentId} />
+          {(!searchQuery && !tags.length) && (
+            <div className="bg-white shadow-md rounded-lg p-4 mt-4">
+              <Pagination page={page} />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 

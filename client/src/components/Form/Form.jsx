@@ -1,16 +1,14 @@
 import { useState, useEffect } from 'react';
-import { TextField, Button, Typography, Paper } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
 import FileBase from 'react-file-base64';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createPost, updatePost } from '../../actions/posts';
-import useStyles from './styles';
+import './styles.css';
 
 const Form = ({ currentId, setCurrentId }) => {
   const [postData, setPostData] = useState({ title: '', message: '', tags: [], selectedFile: '' });
   const post = useSelector((state) => (currentId ? state.posts.posts.find((message) => message._id === currentId) : null));
   const dispatch = useDispatch();
-  const classes = useStyles();
   const user = JSON.parse(localStorage.getItem('profile'));
   const history = useNavigate();
 
@@ -38,45 +36,60 @@ const Form = ({ currentId, setCurrentId }) => {
 
   if (!user?.result?.name) {
     return (
-      <Paper className={classes.paper} elevation={6}>
-        <Typography variant="h6" align="center">
+      <div className="p-4 max-w-md mx-auto bg-white shadow-lg rounded-lg">
+        <h2 className="text-xl font-semibold text-center">
           Please Sign In to create your own memories and like other memories.
-        </Typography>
-      </Paper>
+        </h2>
+      </div>
     );
   }
 
-  // const handleAddChip = (tag) => {
-  //   setPostData({ ...postData, tags: [...postData.tags, tag] })
-
-  // };
-
-  // const handleDeleteChip = (chipToDelete) => {
-  //   setPostData({ ...postData, tags: postData.tags.filter((tag) => tag !== chipToDelete) });
-  // };
-
   return (
-    <Paper className={classes.paper} elevation={6}>
-      <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
-        <Typography variant="h6">{currentId ? `Editing "${post?.title}"` : 'Creating a Memory'}</Typography>
-        <TextField name="title" variant="outlined" label="Title" fullWidth value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} />
-        <TextField name="message" variant="outlined" label="Message" fullWidth multiline rows={4} value={postData.message} onChange={(e) => setPostData({ ...postData, message: e.target.value })} />
-        <div style={{ padding: '5px 0', width: '94%' }}>
-          {/* <ChipInput
-            name="tags"
-            variant="outlined"
-            label="Tags"
-            fullWidth
-            value={postData.tags}
-            onAdd={(chip) => handleAddChip(chip)}
-            onDelete={(chip) => handleDeleteChip(chip)}
-          /> */}
+    <div className="p-4 max-w-md mx-auto bg-white shadow-lg rounded-lg">
+      <form autoComplete="off" noValidate className="space-y-4" onSubmit={handleSubmit}>
+        <h2 className="text-xl font-semibold">{currentId ? `Editing "${post?.title}"` : 'Creating a Memory'}</h2>
+        <div>
+          <label htmlFor="title" className="block text-gray-700">Title</label>
+          <input
+            id="title"
+            name="title"
+            type="text"
+            placeholder="Title"
+            className="w-full p-2 border rounded-lg"
+            value={postData.title}
+            onChange={(e) => setPostData({ ...postData, title: e.target.value })}
+          />
         </div>
-        <div className={classes.fileInput}><FileBase type="file" multiple={false} onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} /></div>
-        <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
-        <Button variant="contained" color="secondary" size="small" onClick={clear} fullWidth>Clear</Button>
+        <div>
+          <label htmlFor="message" className="block text-gray-700">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            placeholder="Message"
+            rows="4"
+            className="w-full p-2 border rounded-lg"
+            value={postData.message}
+            onChange={(e) => setPostData({ ...postData, message: e.target.value })}
+          />
+        </div>
+        <div className="mb-4">
+          <FileBase type="file" multiple={false} onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} />
+        </div>
+        <button
+          className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+          type="submit"
+        >
+          Submit
+        </button>
+        <button
+          className="w-full bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600"
+          type="button"
+          onClick={clear}
+        >
+          Clear
+        </button>
       </form>
-    </Paper>
+    </div>
   );
 };
 

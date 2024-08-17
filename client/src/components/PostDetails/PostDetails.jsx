@@ -1,18 +1,16 @@
-import React, { useEffect } from 'react';
-import { Paper, Typography, CircularProgress, Divider } from '@mui/material';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 
 import { getPost, getPostsBySearch } from '../../actions/posts';
 import CommentSection from './CommentSection';
-import useStyles from './styles';
+import './styles.css';
 
 const Post = () => {
   const { post, posts, isLoading } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
   const history = useNavigate();
-  const classes = useStyles();
   const { id } = useParams();
 
   useEffect(() => {
@@ -31,60 +29,67 @@ const Post = () => {
 
   if (isLoading) {
     return (
-      <Paper elevation={6} className={classes.loadingPaper}>
-        <CircularProgress size="7em" />
-      </Paper>
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-blue-500"></div>
+      </div>
     );
   }
 
   const recommendedPosts = posts.filter(({ _id }) => _id !== post._id);
 
   return (
-    <Paper style={{ padding: '20px', borderRadius: '15px' }} elevation={6}>
-      <div className={classes.card}>
-        <div className={classes.section}>
-          <Typography variant="h3" component="h2">{post.title}</Typography>
-          <Typography gutterBottom variant="h6" color="textSecondary" component="h2">{post.tags.map((tag) => (
-            <Link to={`/tags/${tag}`} style={{ textDecoration: 'none', color: '#3f51b5' }}>
-              {` #${tag} `}
-            </Link>
-          ))}
-          </Typography>
-          <Typography gutterBottom variant="body1" component="p">{post.message}</Typography>
-          <Typography variant="h6">
+    <div className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg">
+      <div className="flex flex-col md:flex-row">
+        <div className="flex-1">
+          <h2 className="text-3xl font-bold mb-2">{post.title}</h2>
+          <h6 className="text-lg text-blue-600 mb-2">
+            {post.tags.map((tag) => (
+              <Link key={tag} to={`/tags/${tag}`} className="mr-2">
+                {`#${tag}`}
+              </Link>
+            ))}
+          </h6>
+          <p className="text-base mb-4">{post.message}</p>
+          <h6 className="text-lg">
             Created by:
-            <Link to={`/creators/${post.name}`} style={{ textDecoration: 'none', color: '#3f51b5' }}>
+            <Link to={`/creators/${post.name}`} className="text-blue-600">
               {` ${post.name}`}
             </Link>
-          </Typography>
-          <Typography variant="body1">{moment(post.createdAt).fromNow()}</Typography>
-          <Divider style={{ margin: '20px 0' }} />
-          <Divider style={{ margin: '20px 0' }} />
+          </h6>
+          <p className="text-base text-gray-600">{moment(post.createdAt).fromNow()}</p>
+          <div className="my-6 border-t border-gray-300"></div>
           <CommentSection post={post} />
-          <Divider style={{ margin: '20px 0' }} />
+          <div className="my-6 border-t border-gray-300"></div>
         </div>
-        <div className={classes.imageSection}>
-          <img className={classes.media} src={post.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} alt={post.title} />
+        <div className="flex-1">
+          <img
+            className="w-full h-64 object-cover rounded-lg"
+            src={post.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'}
+            alt={post.title}
+          />
         </div>
       </div>
       {!!recommendedPosts.length && (
-        <div className={classes.section}>
-          <Typography gutterBottom variant="h5">You might also like:</Typography>
-          <Divider />
-          <div className={classes.recommendedPosts}>
+        <div className="mt-6">
+          <h5 className="text-xl font-bold mb-4">You might also like:</h5>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {recommendedPosts.map(({ title, name, message, likes, selectedFile, _id }) => (
-              <div style={{ margin: '20px', cursor: 'pointer' }} onClick={() => openPost(_id)} key={_id}>
-                <Typography gutterBottom variant="h6">{title}</Typography>
-                <Typography gutterBottom variant="subtitle2">{name}</Typography>
-                <Typography gutterBottom variant="subtitle2">{message}</Typography>
-                <Typography gutterBottom variant="subtitle1">Likes: {likes.length}</Typography>
-                <img src={selectedFile} width="200px" />
+              <div
+                key={_id}
+                className="p-4 bg-gray-100 rounded-lg shadow-md cursor-pointer hover:bg-gray-200"
+                onClick={() => openPost(_id)}
+              >
+                <h6 className="text-lg font-semibold mb-2">{title}</h6>
+                <p className="text-sm text-gray-600 mb-2">{name}</p>
+                <p className="text-sm text-gray-600 mb-2">{message}</p>
+                <p className="text-sm font-medium mb-2">Likes: {likes.length}</p>
+                <img src={selectedFile} className="w-full h-32 object-cover rounded-lg" alt={title} />
               </div>
             ))}
           </div>
         </div>
       )}
-    </Paper>
+    </div>
   );
 };
 

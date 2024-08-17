@@ -1,25 +1,18 @@
 import { useState } from 'react';
-import { Card, CardActions, CardContent, CardMedia, Button, Typography, ButtonBase } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import { likePost, deletePost } from '../../../actions/posts';
-import useStyles from './styles';
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-
-import ThumbUpAltOutlined from '@mui/icons-material/ThumbUpAltOutlined';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import DeleteIcon from '@mui/icons-material/Delete';
+import './styles.css'; // Import the CSS file
 
 const Post = ({ post, setCurrentId }) => {
   const user = JSON.parse(localStorage.getItem('profile'));
   const [likes, setLikes] = useState(post?.likes);
   const dispatch = useDispatch();
   const history = useNavigate();
-  const classes = useStyles();
 
   const userId = user?.result.googleId || user?.result?._id;
-  const hasLikedPost = post.likes?.find((like) => like === userId)
+  const hasLikedPost = post.likes?.find((like) => like === userId);
 
   const handleLike = async () => {
     dispatch(likePost(post._id));
@@ -35,67 +28,70 @@ const Post = ({ post, setCurrentId }) => {
     if (likes.length > 0) {
       return likes.find((like) => like === userId)
         ? (
-          <><ThumbUpAltIcon fontSize="small" />&nbsp;{likes.length > 2 ? `You and ${likes.length - 1} others` : `${likes.length} like${likes.length > 1 ? 's' : ''}`}</>
+          <><i className="fas fa-thumbs-up text-blue-500"></i>&nbsp;{likes.length > 2 ? `You and ${likes.length - 1} others` : `${likes.length} like${likes.length > 1 ? 's' : ''}`}</>
         ) : (
-          <><ThumbUpAltOutlined fontSize="small" />&nbsp;{likes.length} {likes.length === 1 ? 'Like' : 'Likes'}</>
+          <><i className="far fa-thumbs-up text-gray-500"></i>&nbsp;{likes.length} {likes.length === 1 ? 'Like' : 'Likes'}</>
         );
     }
 
-    return <><ThumbUpAltOutlined fontSize="small" />&nbsp;Like</>;
+    return <><i className="far fa-thumbs-up text-gray-500"></i>&nbsp;Like</>;
   };
 
-  const openPost = (e) => {
-    // dispatch(getPost(post._id, history));
-
+  const openPost = () => {
     history(`/posts/${post._id}`);
   };
 
   return (
-    <Card className={classes.card} raised elevation={6}>
-      <ButtonBase
-        component="span"
-        name="test"
-        className={classes.cardAction}
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+      <button
         onClick={openPost}
+        className="w-full focus:outline-none"
       >
-        <CardMedia className={classes.media} image={post.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} title={post.title} />
-        <div className={classes.overlay}>
-          <Typography variant="h6">{post.name}</Typography>
-          <Typography variant="body2">{moment(post.createdAt).fromNow()}</Typography>
-        </div>
-        {(user?.result?.googleId === post?.creator || user?.result?._id === post?.creator) && (
-          <div className={classes.overlay2} name="edit">
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                setCurrentId(post._id);
-              }}
-              style={{ color: 'white' }}
-              size="small"
-            >
-              <MoreHorizIcon fontSize="default" />
-            </Button>
+        <img
+          className="w-full h-64 object-cover"
+          src={post.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'}
+          alt={post.title}
+        />
+        <div className="p-4">
+          <div className="flex justify-between items-center">
+            <div className="text-lg font-semibold">{post.name}</div>
+            <div className="text-sm text-gray-500">{moment(post.createdAt).fromNow()}</div>
           </div>
-        )}
-        <div className={classes.details}>
-          <Typography variant="body2" color="textSecondary" component="h2">{post.tags.map((tag) => `#${tag} `)}</Typography>
+          {(user?.result?.googleId === post?.creator || user?.result?._id === post?.creator) && (
+            <div className="absolute top-4 right-4">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentId(post._id);
+                }}
+                className="text-white"
+              >
+                <i className="fas fa-ellipsis-h"></i>
+              </button>
+            </div>
+          )}
+          <div className="mt-2 text-gray-600">{post.tags.map((tag) => `#${tag} `)}</div>
+          <h2 className="text-xl font-bold mt-2">{post.title}</h2>
+          <p className="text-gray-700 mt-2">{post.message.split(' ').splice(0, 20).join(' ')}...</p>
         </div>
-        <Typography className={classes.title} gutterBottom variant="h5" component="h2">{post.title}</Typography>
-        <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">{post.message.split(' ').splice(0, 20).join(' ')}...</Typography>
-        </CardContent>
-      </ButtonBase>
-      <CardActions className={classes.cardActions}>
-        <Button size="small" color="primary" disabled={!user?.result} onClick={handleLike}>
+      </button>
+      <div className="flex justify-between items-center p-4 border-t border-gray-200">
+        <button
+          onClick={handleLike}
+          className={`flex items-center ${user?.result ? 'text-blue-500' : 'text-gray-500'}`}
+        >
           <Likes />
-        </Button>
+        </button>
         {(user?.result?.googleId === post?.creator || user?.result?._id === post?.creator) && (
-          <Button size="small" color="secondary" onClick={() => dispatch(deletePost(post._id))}>
-            <DeleteIcon fontSize="small" /> &nbsp; Delete
-          </Button>
+          <button
+            onClick={() => dispatch(deletePost(post._id))}
+            className="flex items-center text-red-500"
+          >
+            <i className="fas fa-trash-alt"></i>&nbsp; Delete
+          </button>
         )}
-      </CardActions>
-    </Card>
+      </div>
+    </div>
   );
 };
 
