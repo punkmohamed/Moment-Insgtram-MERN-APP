@@ -1,23 +1,19 @@
 {
     "version": 2,
-    "functions": {
-        "src/module/user/**/*.js": {
-            "maxDuration": 60,
-            "memory": 1024
-        },
-        "src/module/post/**/*.js": {
-            "maxDuration": 60,
-            "memory": 1024
+    "builds": [
+        {
+            "src": "src/module/**/*.js",
+            "use": "@vercel/node"
         }
-    },
+    ],
     "routes": [
         {
             "src": "/api/user/(.*)",
-            "dest": "/src/module/user/$1.js"
+            "dest": "/src/module/user/userRoutes.js"
         },
         {
             "src": "/api/post/(.*)",
-            "dest": "/src/module/post/$1.js"
+            "dest": "/src/module/post/postRoutes.js"
         }
     ]
 }
