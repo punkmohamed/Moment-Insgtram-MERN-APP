@@ -20,9 +20,9 @@ app.use(cors());
 
 app.use('/posts', postRoutes);
 
-app.post("/user/signin", signin);
-app.post("/user/signup", signup);
-app.get("/user", getUser);
+app.post('/signin', signin);
+app.post('/signup', signup);
+app.get('/user', getUser);
 
 // app.use("/user", userRouter);
 db
