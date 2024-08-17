@@ -1,9 +1,9 @@
-// import express from "express";
-// const router = express.Router();
+import express from "express";
+const router = express.Router();
 
-// import { signin, signup } from "./user.controllers.js";
+import { signin, signup } from "./user.controllers.js";
 
-// router.post("/signin", signin);
-// router.post("/signup", signup);
+router.post("/signin", signin);
+router.post("/signup", signup);
 
-// export default router;
+export default router;
