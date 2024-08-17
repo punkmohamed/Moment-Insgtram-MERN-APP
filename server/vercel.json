@@ -1,14 +1,23 @@
 {
     "version": 2,
     "functions": {
-        "api/**/*.js": {
-            "maxDuration": 60
+        "src/module/user/**/*.js": {
+            "maxDuration": 60,
+            "memory": 1024
+        },
+        "src/module/post/**/*.js": {
+            "maxDuration": 60,
+            "memory": 1024
         }
     },
     "routes": [
         {
-            "src": "/(.*)",
-            "dest": "/api/$1"
+            "src": "/api/user/(.*)",
+            "dest": "/src/module/user/$1.js"
+        },
+        {
+            "src": "/api/post/(.*)",
+            "dest": "/src/module/post/$1.js"
         }
     ]
 }
