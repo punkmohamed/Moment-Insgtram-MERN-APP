@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'https://moment-insgtram-mern-api.vercel.app' });
+const API = axios.create({
+    baseURL: 'https://moment-insgtram-mern-api.vercel.app',
+    timeout: 30000, // Optional timeout
+    withCredentials: true, // Optional: if your API uses cookies
+});
 
 API.interceptors.request.use((req) => {
     if (localStorage.getItem('profile')) {
