@@ -15,6 +15,8 @@ const port = process.env.PORT || 3001;
 const allowedOrigins = [
     'https://moment-insgtram-mern.vercel.app',
     'https://moment-insgtram-mern-kfds711dg-punkmohameds-projects.vercel.app',
+    'https://moment-insgtram-mern-kfds711dg-punkmohameds-projects.vercel.app/auth',
+    'https://moment-insgtram-mern-kfds711dg-punkmohameds-projects.vercel.app/posts',
     // Add more allowed origins as needed
 ];
 
