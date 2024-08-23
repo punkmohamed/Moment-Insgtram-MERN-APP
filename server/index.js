@@ -14,8 +14,13 @@ const app = express();
 const port = process.env.PORT || 3001
 app.use(express.json({ limit: '30mb', extended: true }))
 app.use(express.urlencoded({ limit: '30mb', extended: true }))
-app.use(cors());
+const corsOptions = {
+    origin: 'https://moment-insgtram-mern.vercel.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    credentials: true,
+};
 
+app.use(cors(corsOptions));
 app.use('/posts', postRoutes);
 app.use("/user", userRouter);
 db
