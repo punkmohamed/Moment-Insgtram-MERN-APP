@@ -21,6 +21,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle preflight requests for all routes
+
 app.use('/posts', postRoutes);
 app.use("/user", userRouter);
 db
