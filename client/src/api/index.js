@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API = axios.create({
     baseURL: 'https://moment-insgtram-mern-api.vercel.app',
-    timeout: 30000, // Optional timeout
+    timeout: 150000, // Optional timeout
     withCredentials: true, // Optional: if your API uses cookies
 });
 
