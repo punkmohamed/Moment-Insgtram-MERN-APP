@@ -15,14 +15,29 @@ const port = process.env.PORT || 3001
 app.use(express.json({ limit: '30mb', extended: true }))
 app.use(express.urlencoded({ limit: '30mb', extended: true }))
 
+const allowedOrigins = [
+    'https://moment-insgtram-mern.vercel.app',
+];
+
 const corsOptions = {
-    origin: '*',
+    origin: (origin, callback) => {
+        // Check if origin is in the allowed list or if it's a server-to-server request (no origin)
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true, // Allows cookies to be sent with requests
 };
 
+// Apply CORS middleware
 app.use(cors(corsOptions));
+
+// Handle preflight requests for all routes
 app.options('*', cors(corsOptions));
+
 
 
 app.use('/posts', postRoutes);
