@@ -11,7 +11,7 @@ dotenv.config();
 const code = process.env.JWT_SECRET;
 const secret = code;
 export const getUser = async (req, res) => {
-  const users = await UserModel.find()
+  const users = await UserModal.find()
   res.send('Hello from Vercel letsignup!')
 }
 export const signin = async (req, res) => {
