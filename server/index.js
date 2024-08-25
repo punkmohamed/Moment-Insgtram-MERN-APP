@@ -34,12 +34,9 @@ app.use(cors(corsOptions));
 
 
 
-app.use('/posts', postRoutes);
-app.use("/user", userRoutes);
+app.use('/api/posts', postRoutes);
+app.use("/api/user", userRoutes);
 db
 const PORT = process.env.PORT || 3001
 
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))
-app.get('/', (req, res) => {
-    res.send('Hello from Vercel lets see then22!');
-})
