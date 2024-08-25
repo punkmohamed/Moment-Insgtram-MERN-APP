@@ -2,10 +2,10 @@
 import express from 'express';
 import cors from 'cors';
 
-import postRoutes from './src/module/posts/posts.routes.js';
-import userRouter from "./src/module/user/user.routes.js";
 import db from './db/db.js';
 import dotenv from "dotenv";
+import postRoutes from './src/module/posts/posts.routes';
+import userRoutes from './src/module/user/user.routes';
 
 
 dotenv.config();
@@ -35,7 +35,7 @@ app.use(cors(corsOptions));
 
 
 app.use('/posts', postRoutes);
-app.use("/user", userRouter);
+app.use("/user", userRoutes);
 db
 const PORT = process.env.PORT || 3001
 
