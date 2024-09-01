@@ -1,11 +1,11 @@
 
 import express from 'express';
-import cors from 'cors';
 
 import db from './db/db.js';
 import dotenv from "dotenv";
-import postRoutes from './src/module/posts/posts.routes';
-import userRoutes from './src/module/user/user.routes';
+import postRoutes from './src/module/posts/posts.routes.js';
+import userRoutes from './src/module/user/user.routes.js';
+import cors from 'cors';
 
 
 dotenv.config();
@@ -15,9 +15,9 @@ app.use(express.json({ limit: '30mb', extended: true }))
 app.use(express.urlencoded({ limit: '30mb', extended: true }))
 
 const allowedOrigins = [
-    'https://moment-insgtram-mern.vercel.app',
+    'http://localhost:5173', // Add your frontend origin here
+    'https://moment-insgtram-mern.vercel.app', // Add other allowed origins here
 ];
-
 
 const corsOptions = {
     origin: function (origin, callback) {
@@ -27,10 +27,12 @@ const corsOptions = {
             callback(new Error("Not allowed by CORS"));
         }
     },
-    credentials: true,
+    credentials: true, // This allows credentials (cookies, authorization headers, etc.)
 };
 
 app.use(cors(corsOptions));
+
+
 
 
 

@@ -24,3 +24,14 @@ export const signup = (formData, router) => async (dispatch) => {
     console.log(error);
   }
 };
+
+export const updateUser = (formData, id) => async (dispatch) => {
+  try {
+    const { data } = await api.updateUser(formData, id);
+
+    dispatch({ type: AUTH, data });
+
+  } catch (error) {
+    console.log(error);
+  }
+};

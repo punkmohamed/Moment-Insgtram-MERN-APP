@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL: 'https://moment-insgtram-mern-api.vercel.app',
-    timeout: 150000, // Optional timeout
-    withCredentials: true, // Optional: if your API uses cookies
+    baseURL: 'http://localhost:3001/api',
+
+    withCredentials: true,
 });
 
 API.interceptors.request.use((req) => {
@@ -24,3 +24,4 @@ export const updatePost = (id, updatedPost) => API.patch(`/posts/update/${id}`, 
 export const deletePost = (id) => API.delete(`/posts/delete/${id}`);
 export const signIn = (formData) => API.post('/user/signin', formData);
 export const signUp = (formData) => API.post('/user/signup', formData);
+export const updateUser = (formData, id) => API.patch(`/user/update/${id}`, formData);

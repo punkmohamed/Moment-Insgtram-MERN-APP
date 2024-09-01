@@ -1,7 +1,7 @@
-import express from 'express';
-import mongoose from 'mongoose';
+
 import PostMessage from '../../../db/models/postMessage.js';
-const router = express.Router();
+import mongoose from "mongoose";
+
 export const getPosts = async (req, res) => {
     const { page } = req.query;
 
@@ -10,7 +10,9 @@ export const getPosts = async (req, res) => {
         const startIndex = (Number(page) - 1) * LIMIT
 
         const total = await PostMessage.countDocuments({});
-        const posts = await PostMessage.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
+        const posts = await PostMessage.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex).populate('creator', 'name imageUrl')
+
+
 
         res.json({ data: posts, currentPage: Number(page), numberOfPages: Math.ceil(total / LIMIT) });
     } catch (error) {
@@ -33,7 +35,7 @@ export const getPostsBySearch = async (req, res) => {
 export const getPostsByCreator = async (req, res) => {
     const { name } = req.query;
     try {
-        const posts = await PostMessage.find({ name });
+        const posts = await PostMessage.find({ name }).populate('creator', 'name imageUrl')
         res.json({ data: posts });
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -44,7 +46,7 @@ export const getPost = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const post = await PostMessage.findById(id);
+        const post = await PostMessage.findById(id).populate('creator', 'name imageUrl')
 
         res.status(200).json(post);
     } catch (error) {
@@ -98,7 +100,7 @@ export const likePost = async (req, res) => {
 
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
 
-    const post = await PostMessage.findById(id);
+    const post = await PostMessage.findById(id).populate('creator', 'name imageUrl')
 
     const index = post.likes.findIndex((id) => id === String(req.userId));
 
@@ -108,7 +110,7 @@ export const likePost = async (req, res) => {
         post.likes = post.likes.filter((id) => id !== String(req.userId));
     }
 
-    const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true });
+    const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true }).populate('creator', 'name imageUrl')
 
     res.status(200).json(updatedPost);
 }
@@ -126,4 +128,3 @@ export const commentPost = async (req, res) => {
     res.json(updatedPost);
 };
 
-export default router;

@@ -35,7 +35,7 @@ export const signin = async (req, res) => {
 }
 
 export const signup = async (req, res) => {
-  const { email, password, firstName, lastName } = req.body;
+  const { email, password, firstName, lastName, imageUrl } = req.body;
 
   try {
     const oldUser = await UserModal.findOne({ email });
@@ -44,7 +44,7 @@ export const signup = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const result = await UserModal.create({ email, password: hashedPassword, name: `${firstName} ${lastName}` });
+    const result = await UserModal.create({ email, password: hashedPassword, name: `${firstName} ${lastName}`, imageUrl });
 
     const token = jwt.sign({ email: result.email, id: result._id }, secret, { expiresIn: "1h" });
 
@@ -55,3 +55,17 @@ export const signup = async (req, res) => {
     console.log(error);
   }
 };
+
+export const updateUser = async (req, res) => {
+  const { id } = req.params;
+  const { ...rest } = req.body;
+  try {
+    const result = await UserModal.findByIdAndUpdate(id, { ...rest }, { new: true });
+    const token = jwt.sign({ email: result.email, id: result._id }, secret, { expiresIn: "1h" });
+    res.status(201).json({ result, token });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+
+    console.log(error);
+  }
+}

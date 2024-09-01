@@ -5,6 +5,7 @@ import Home from './components/Home/Home';
 import PostDetails from './components/PostDetails/PostDetails';
 import Auth from './components/Auth/Auth';
 import CreatorOrTag from './components/CreatorOrTag/CreatorOrTag';
+import MyProfile from './components/profile/MyProfile';
 
 function App() {
   const user = JSON.parse(localStorage.getItem('profile'));
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/posts" />} />
           <Route path="/posts" element={<Home />} />
+          <Route path="/profile/:name" element={<MyProfile />} />
           <Route path="/posts/search" element={<Home />} />
           <Route path="/posts/:id" element={<PostDetails />} />
           <Route path="/creators/:name" element={<CreatorOrTag />} />

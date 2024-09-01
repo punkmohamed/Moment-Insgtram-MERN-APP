@@ -7,9 +7,10 @@ import { faLock, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { signin, signup } from '../../actions/auth';
 import { AUTH } from '../../constants/actionTypes';
 import { jwtDecode } from 'jwt-decode';
-import './styles.css'; // Import the CSS file
+import FileBase from 'react-file-base64';
+import './styles.css';
 
-const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' };
+const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '', imageUrl: '' };
 
 const SignUp = () => {
   const [form, setForm] = useState(initialState);
@@ -51,6 +52,9 @@ const SignUp = () => {
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
+  const handleFileUpload = ({ base64 }) => {
+    setForm({ ...form, imageUrl: base64 });
+  };
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
@@ -130,6 +134,12 @@ const SignUp = () => {
               </div>
             )}
           </div>
+          {isSignup && (
+            <div className="flex flex-col">
+              <label className="text-gray-700">Profile Picture</label>
+              <FileBase type="file" multiple={false} onDone={handleFileUpload} />
+            </div>
+          )}
           <button
             type="submit"
             className="w-full mt-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"

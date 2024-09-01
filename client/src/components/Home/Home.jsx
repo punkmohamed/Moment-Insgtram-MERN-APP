@@ -5,6 +5,8 @@ import Posts from '../Posts/Posts';
 import Form from '../Form/Form';
 import Pagination from '../Pagination';
 import './styles.css';
+import { useDispatch } from 'react-redux';
+import usePost from '../../hooks/usePost';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -14,12 +16,12 @@ const Home = () => {
   const query = useQuery();
   const page = query.get('page') || 1;
   const searchQuery = query.get('searchQuery');
-
+  const dispatch = useDispatch();
   const [currentId, setCurrentId] = useState(0);
   const [search, setSearch] = useState('');
   const [tags, setTags] = useState([]);
   const history = useNavigate();
-
+  const { postModal, setPostModal } = usePost()
   const searchPost = () => {
     if (search.trim() || tags.length) {
       dispatch(getPostsBySearch({ search, tags: tags.join(',') }));
@@ -39,7 +41,7 @@ const Home = () => {
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="container mx-auto flex flex-wrap">
         <div className="w-full md:w-2/3 lg:w-3/4 p-4">
-          <Posts setCurrentId={setCurrentId} />
+          <Posts setCurrentId={setCurrentId} setPostModal={setPostModal} />
         </div>
         <div className="w-full md:w-1/3 lg:w-1/4 p-4">
           <div className="bg-white shadow-md rounded-lg p-4">
@@ -59,7 +61,7 @@ const Home = () => {
               Search
             </button>
           </div>
-          <Form currentId={currentId} setCurrentId={setCurrentId} />
+          <Form currentId={currentId} setCurrentId={setCurrentId} setPostModal={setPostModal} postModal={postModal} />
           {(!searchQuery && !tags.length) && (
             <div className="bg-white shadow-md rounded-lg p-4 mt-4">
               <Pagination page={page} />
