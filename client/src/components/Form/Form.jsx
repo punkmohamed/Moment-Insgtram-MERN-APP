@@ -37,7 +37,11 @@ const Form = ({ currentId, setCurrentId, setPostModal, postModal }) => {
       clear();
     }
   };
+  const handlePost = () => {
+    setPostModal(true)
+    setCurrentId(0)
 
+  }
   if (!user?.result?.name) {
     return (
       <div className="p-4 max-w-md mx-auto bg-white shadow-lg rounded-lg">
@@ -51,18 +55,18 @@ const Form = ({ currentId, setCurrentId, setPostModal, postModal }) => {
   return (
     <>
 
-      <button onClick={() => setPostModal(true)} className='bg-red-300 text-white'> clickme</button>
+      <button onClick={handlePost} className='bg-red-300 text-white'> clickme</button>
       <Modal
         show={postModal}
         onClose={() => setPostModal(false)}
-        size="2xl"
+        size="lg"
         className="custom-modal"
       >
-        <form autoComplete="off" noValidate className="space-y-4" onSubmit={handleSubmit}>
-          <Modal.Header>Update Profile Picture</Modal.Header>
+        <form autoComplete="off" noValidate className="space-y-4  overflow-y-auto" onSubmit={handleSubmit}>
+          <Modal.Header></Modal.Header>
           <Modal.Body>
             <div className="form-preview">
-              <div className="p-4 max-w-md mx-auto bg-white shadow-lg rounded-lg">
+              <div className="p-1 max-w-md mx-auto bg-white shadow-lg rounded-lg">
                 <h2 className="text-xl font-semibold">{currentId ? `Editing "${post?.title}"` : 'Creating a Memory'}</h2>
                 <div>
                   <label htmlFor="title" className="block text-gray-700">Title</label>
@@ -96,22 +100,13 @@ const Form = ({ currentId, setCurrentId, setPostModal, postModal }) => {
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <div className=' space-x-90'>
+            <div className=' flex  space-x-60'>
+              <button type="submit" className="btn btn-primary px-7 bg-slate-800 text-white p-2 rounded-lg ">{currentId ? "Confirm Update" : "Post"}</button>
               <button
-                className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-                type="submit"
-              >
-                Submit
-              </button>
-              <button
-                className="w-full bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600"
+                className="w-full bg-red-500 text-white px-7  rounded-lg hover:bg-gray-600"
                 type="button"
                 onClick={clear}
-              >
-                Clear
-              </button>
-              <button className="btn btn-primary bg-slate-800 text-white p-3 rounded-lg ">Confirm Update</button>
-              <button onClick={() => setPostModal(false)} className="btn btn-secondary bg-red-500  text-white p-3 rounded-lg">Cancel</button>
+              >Clear</button>
             </div>
           </Modal.Footer>
         </form>

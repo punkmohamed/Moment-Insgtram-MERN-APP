@@ -4,15 +4,14 @@ import jwt from "jsonwebtoken";
 import UserModal from "../../../db/models/user.js";
 import dotenv from "dotenv";
 
-// Load environment variables from .env file
+
 dotenv.config();
 
-// Retrieve the MongoDB URI from the environment variables
 const code = process.env.JWT_SECRET;
 const secret = code;
 export const getUser = async (req, res) => {
   const users = await UserModal.find()
-  res.send('Hello from Vercel letsignup!')
+  res.status(200).json({ users });
 }
 export const signin = async (req, res) => {
   const { email, password } = req.body;

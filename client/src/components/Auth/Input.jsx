@@ -1,41 +1,24 @@
-import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+// import React from 'react';
 
-const Input = ({ name, handleChange, label, half, autoFocus, type, handleShowPassword }) => {
-  const [inputType, setInputType] = useState(type);
+// const FloatingLabel = ({ label, color = 'gray', children, ...props }) => {
+//   const colorClass = color === 'success' ? 'text-green-500' : color === 'error' ? 'text-red-500' : 'text-gray-500';
 
-  const togglePasswordVisibility = () => {
-    if (name === 'password') {
-      setInputType(inputType === 'password' ? 'text' : 'password');
-      handleShowPassword();
-    }
-  };
+//   return (
+//     <div className="relative">
+//       <input
+//         {...props}
+//         className="peer w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none"
+//       />
+//       <label
+//         className={`absolute top-2 left-2 text-gray-500 transition-transform duration-300 ease-in-out transform -translate-y-1/2 ${props.value || props.placeholder ? '-translate-y-6 scale-75' : 'translate-y-1/2'
+//           } peer-focus:-translate-y-6 peer-focus:text-blue-500 ${colorClass}`}
+//       >
+//         {label}
+//       </label>
+//       {props.error && <div className="text-red-600 text-sm mt-1">{props.error}</div>}
+//       {props.success && <div className="text-green-600 text-sm mt-1">{props.success}</div>}
+//     </div>
+//   );
+// };
 
-  return (
-    <div className={`flex flex-col ${half ? 'sm:w-1/2' : 'w-full'} mb-4`}>
-      <label className="text-gray-700 mb-1">{label}</label>
-      <div className="relative">
-        <input
-          name={name}
-          onChange={handleChange}
-          required
-          className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          autoFocus={autoFocus}
-          type={inputType}
-        />
-        {name === 'password' && (
-          <button
-            type="button"
-            onClick={togglePasswordVisibility}
-            className="absolute inset-y-0 right-0 flex items-center pr-3"
-          >
-            <FontAwesomeIcon icon={inputType === 'password' ? faEye : faEyeSlash} className="h-5 w-5 text-gray-500" />
-          </button>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export default Input;
+// export default FloatingLabel;

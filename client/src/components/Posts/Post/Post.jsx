@@ -5,12 +5,14 @@ import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import { likePost, deletePost } from '../../../actions/posts';
 import './styles.css';
-import { Dropdown, Modal, Button } from 'flowbite-react';
+import { Modal, Button } from 'flowbite-react';
 import CommentSection from '../../PostDetails/CommentSection';
+import ItemComponent from '../../Accounts/ItemComponents';
 
 const Post = ({ post, setCurrentId, setPostModal }) => {
   const user = JSON.parse(localStorage.getItem('profile'));
   const [likes, setLikes] = useState(post?.likes);
+  const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const history = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -19,11 +21,15 @@ const Post = ({ post, setCurrentId, setPostModal }) => {
   const handleDelete = () => {
     dispatch(deletePost(post._id));
     setShowModal(false);
+    setOpen(false);
   };
-
+  const handleToggleOpen = () => {
+    setOpen(!open);
+  };
   const handleUpdate = () => {
     setPostModal(true)
     setCurrentId(post._id);
+    setOpen(false);
   };
   const userId = user?.result.googleId || user?.result._id;
   const hasLikedPost = post.likes?.find((like) => like === userId);
@@ -73,15 +79,22 @@ const Post = ({ post, setCurrentId, setPostModal }) => {
           </p>
 
           {isPostCreator && (
+
             <div className="absolute top-4 right-4">
-              <Dropdown inline label={<i className="fas fa-ellipsis-h"></i>}>
-                <Dropdown.Item onClick={() => setShowModal(true)}>
-                  Delete
-                </Dropdown.Item>
-                <Dropdown.Item onClick={handleUpdate}>
-                  Edit
-                </Dropdown.Item>
-              </Dropdown>
+              <div className="relative">
+                <span onClick={handleToggleOpen}>
+                  <svg
+                    fill="currentColor"
+                    className="w-5 h-5"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
+                  </svg>
+                </span>
+                {open && (
+                  <ItemComponent handleUpdate={handleUpdate} setShowModal={setShowModal} />
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -147,20 +160,11 @@ const Post = ({ post, setCurrentId, setPostModal }) => {
               <Modal
                 show={showModall}
                 onClose={() => setShowModall(false)}
-                size="2xl"
+                size="xl"
                 className="custom-modal"
               >
                 <Modal.Header>Comments</Modal.Header>
                 <Modal.Body>
-                  <h2 className="text-xl font-semibold mb-2">Comments</h2>
-                  <div className="space-y-2">
-                    {post?.comments?.map((c, i) => (
-                      <div key={i} className="text-base">
-                        <strong className="mr-1">{c.split(': ')[0]}</strong>
-                        {c.split(': ')[1]}
-                      </div>
-                    ))}
-                  </div>
                   <CommentSection post={post} />
                 </Modal.Body>
 

@@ -36,13 +36,15 @@ const Navbar = () => {
     setUser(JSON.parse(localStorage.getItem('profile')));
   }, [userImg]);
   return (
-    <header className="bg-white shadow-md">
-      <nav className="flex items-center justify-between p-4">
+    <header className="bg-white shadow-md ">
+
+      <nav className="flex items-center justify-between p-4 lg:hidden">
         <Link to="/" className="flex items-center">
           <img src={memoriesText} alt="Memories Text" className="h-11 mr-2" />
           <img src={memoriesLogo} alt="Memories Logo" className="h-10" />
         </Link>
         <div className="flex items-center">
+          <Link to='/accounts'><span className="ml-2 text-lg font-semibold">accounts</span></Link>
           {user?.result ? (
             <div className="flex items-center space-x-4">
               <div className="flex items-center">
@@ -57,8 +59,11 @@ const Navbar = () => {
                     {user?.result.name.charAt(0)}
                   </div>
                 )}
+
+
                 <Link to={`/profile/${user?.result.name}`}><span className="ml-2 text-lg font-semibold">{user?.result.name}</span></Link>
               </div>
+
               <button
                 className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
                 onClick={logout}
