@@ -80,7 +80,7 @@ const Post = ({ post, setCurrentId, setPostModal }) => {
 
           {isPostCreator && (
 
-            <div className="absolute top-4 right-4">
+            <div className="absolute top-4 right-4 hover:bg-slate-200 p-1 rounded-lg cursor-pointer">
               <div className="relative">
                 <span onClick={handleToggleOpen}>
                   <svg

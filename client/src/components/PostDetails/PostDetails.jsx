@@ -24,6 +24,7 @@ const Post = () => {
   }, [post]);
 
   if (!post) return null;
+  console.log(post);
 
   const openPost = (_id) => history(`/posts/${_id}`);
 
@@ -38,38 +39,46 @@ const Post = () => {
   const recommendedPosts = posts.filter(({ _id }) => _id !== post._id);
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg">
-      <div className="flex flex-col md:flex-row">
-        <div className="flex-1">
-          <h2 className="text-3xl font-bold mb-2">{post.title}</h2>
-          <h6 className="text-lg text-blue-600 mb-2">
-            {post.tags.map((tag) => (
-              <Link key={tag} to={`/tags/${tag}`} className="mr-2">
-                {`#${tag}`}
-              </Link>
-            ))}
-          </h6>
-          <p className="text-base mb-4">{post.message}</p>
-          <h6 className="text-lg">
-            Created by:
-            <Link to={`/creators/${post.name}`} className="text-blue-600">
-              {` ${post.name}`}
+    <div className="m-20 p-6 max-w-6xl mx-auto bg-white rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-2 items-center gap-6">
+
+      <div className="relative">
+        <img
+          className="w-full h-96 object-cover rounded-lg"
+          src={post.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'}
+          alt={post.title}
+        />
+      </div>
+
+      <div className="text-center md:text-left">
+        <div className="flex items-center justify-center md:justify-start">
+          {post?.creator?.imageUrl ? <img
+            className="w-12 h-12 rounded-full object-cover mr-4"
+            src={post?.creator?.imageUrl}
+            alt={post.name}
+          /> : <div className="mr-4 size-12 rounded-full bg-purple-500 text-white flex items-center justify-center text-xl font-semibold transition-transform duration-300 ease-in-out transform hover:scale-110">
+            {post?.creator?.name.charAt(0).toUpperCase()}
+          </div>
+          }
+
+          <div>
+            <Link to={`/creators/${post.name}`}>
+              <h4 className="text-lg font-bold">{post.name}</h4>
             </Link>
-          </h6>
-          <p className="text-base text-gray-600">{moment(post.createdAt).fromNow()}</p>
-          <div className="my-6 border-t border-gray-300"></div>
-          <CommentSection post={post} />
-          <div className="my-6 border-t border-gray-300"></div>
+            <p className="text-sm text-gray-500">
+              {moment(post.createdAt).format('DD MMMM YYYY')}
+            </p>
+          </div>
         </div>
-        <div className="flex-1">
-          <img
-            className="w-full h-64 object-cover rounded-lg"
-            src={post.selectedFile || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'}
-            alt={post.title}
-          />
+
+        <p className="mt-4 text-gray-600 break-words max-w-md">
+          {post.message}
+        </p>
+
+        <div className="mt-6 max-h-100 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 rounded-lg p-4">
+          <CommentSection post={post} />
         </div>
       </div>
-      {!!recommendedPosts.length && (
+      {/* {!!recommendedPosts.length && (
         <div className="mt-6">
           <h5 className="text-xl font-bold mb-4">You might also like:</h5>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -88,8 +97,9 @@ const Post = () => {
             ))}
           </div>
         </div>
-      )}
+      )} */}
     </div>
+
   );
 };
 

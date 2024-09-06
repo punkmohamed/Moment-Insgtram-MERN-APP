@@ -7,6 +7,8 @@ import Pagination from '../Pagination';
 import './styles.css';
 import { useDispatch } from 'react-redux';
 import usePost from '../../hooks/usePost';
+import useUser from '../../hooks/useUser';
+import RightMembers from './../RightMembers/RightMembers';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -14,6 +16,7 @@ function useQuery() {
 
 const Home = () => {
   const query = useQuery();
+  const { user } = useUser()
   const page = query.get('page') || 1;
   const searchQuery = query.get('searchQuery');
   const dispatch = useDispatch();
@@ -39,6 +42,19 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
+      <div className='mx-auto w-100'>
+        <div className='border-t-4 border-t-emerald-700 p-4 bg-white'>
+          <div className='flex justify-between items-center'>
+            <img
+              src={user?.result.imageUrl}
+              alt={user?.result.name}
+              className="size-15 rounded-full object-cover"
+            />
+            <h1 className='font-bold text-lg'>what is on your mind?</h1>
+            <Form currentId={currentId} setCurrentId={setCurrentId} setPostModal={setPostModal} postModal={postModal} />
+          </div>
+        </div>
+      </div>
       <div className="container mx-auto flex flex-wrap">
         <div className="w-full md:w-2/3 lg:w-3/4 p-4">
           <Posts setCurrentId={setCurrentId} setPostModal={setPostModal} />
@@ -61,7 +77,7 @@ const Home = () => {
               Search
             </button>
           </div>
-          <Form currentId={currentId} setCurrentId={setCurrentId} setPostModal={setPostModal} postModal={postModal} />
+          <RightMembers />
           {(!searchQuery && !tags.length) && (
             <div className="bg-white shadow-md rounded-lg p-4 mt-4">
               <Pagination page={page} />

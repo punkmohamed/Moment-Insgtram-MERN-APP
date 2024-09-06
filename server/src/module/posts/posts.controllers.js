@@ -41,6 +41,15 @@ export const getPostsByCreator = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
+export const getUserLikedPosts = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const posts = await PostMessage.find({ likes: id }).populate('creator', 'name imageUrl')
+        res.json({ data: posts });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
 
 export const getPost = async (req, res) => {
     const { id } = req.params;

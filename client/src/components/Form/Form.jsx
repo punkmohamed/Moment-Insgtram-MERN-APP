@@ -55,18 +55,18 @@ const Form = ({ currentId, setCurrentId, setPostModal, postModal }) => {
   return (
     <>
 
-      <button onClick={handlePost} className='bg-red-300 text-white'> clickme</button>
+      <button onClick={handlePost} className='bg-green-300 text-white p-3 px-6 rounded-xl'> Post</button>
       <Modal
         show={postModal}
         onClose={() => setPostModal(false)}
         size="lg"
         className="custom-modal"
       >
-        <form autoComplete="off" noValidate className="space-y-4  overflow-y-auto" onSubmit={handleSubmit}>
+        <form autoComplete="off" noValidate className="  overflow-y-auto" onSubmit={handleSubmit}>
           <Modal.Header></Modal.Header>
           <Modal.Body>
             <div className="form-preview">
-              <div className="p-1 max-w-md mx-auto bg-white shadow-lg rounded-lg">
+              <div className="p-1 max-w-md mx-auto bg-white rounded-lg">
                 <h2 className="text-xl font-semibold">{currentId ? `Editing "${post?.title}"` : 'Creating a Memory'}</h2>
                 <div>
                   <label htmlFor="title" className="block text-gray-700">Title</label>
@@ -80,7 +80,7 @@ const Form = ({ currentId, setCurrentId, setPostModal, postModal }) => {
                     onChange={(e) => setPostData({ ...postData, title: e.target.value })}
                   />
                 </div>
-                <div>
+                <div className='my-3'>
                   <label htmlFor="message" className="block text-gray-700">Message</label>
                   <textarea
                     id="message"

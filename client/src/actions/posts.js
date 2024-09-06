@@ -1,4 +1,4 @@
-import { START_LOADING, END_LOADING, FETCH_ALL, FETCH_POST, FETCH_BY_SEARCH, CREATE, UPDATE, DELETE, LIKE, COMMENT, FETCH_BY_CREATOR } from '../constants/actionTypes';
+import { START_LOADING, END_LOADING, FETCH_ALL, FETCH_POST, FETCH_BY_SEARCH, FETCH_BY_LIKED, CREATE, UPDATE, DELETE, LIKE, COMMENT, FETCH_BY_CREATOR } from '../constants/actionTypes';
 import * as api from '../api/index.js';
 
 export const getPost = (id) => async (dispatch) => {
@@ -31,6 +31,17 @@ export const getPostsByCreator = (name) => async (dispatch) => {
     const { data: { data } } = await api.fetchPostsByCreator(name);
 
     dispatch({ type: FETCH_BY_CREATOR, payload: { data } });
+    dispatch({ type: END_LOADING });
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getUserLikedPosts = (id) => async (dispatch) => {
+  try {
+    console.log('User ID:', id);
+    dispatch({ type: START_LOADING });
+    const { data: { data } } = await api.getUserLikedPosts(id);
+    dispatch({ type: FETCH_BY_LIKED, payload: { data } });
     dispatch({ type: END_LOADING });
   } catch (error) {
     console.log(error);

@@ -36,10 +36,11 @@ const Accounts = () => {
 
 
     const search = users && users?.users?.filter(item => item.name?.toLowerCase().trim().includes(searchValue?.toLowerCase().trim()))
-    console.log(users)
+
 
     return (
         <>
+
             <div className="bg-yellow-400 rounded-lg mt-5 " style={{ backgroundImage: `url(${people})` }}>
                 <div className="h-3" >
                     <div className="text-white w-96 flex justify-center items-center">

@@ -4,6 +4,7 @@ import './styles.css';
 import { useEffect } from 'react';
 import useUser from '../../hooks/useUser';
 import { getPosts } from '../../actions/posts';
+import PostLoader from '../Loaders/PostLoader';
 
 // eslint-disable-next-line react/prop-types
 const Posts = ({ setCurrentId, setPostModal }) => {
@@ -22,8 +23,11 @@ const Posts = ({ setCurrentId, setPostModal }) => {
   return (
     <div className="container mx-auto px-4">
       {isLoading ? (
-        <div className="flex justify-center items-center h-48">
-          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+          <PostLoader />
+          <PostLoader />
+          <PostLoader />
+          <PostLoader />
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 w-full px-4">

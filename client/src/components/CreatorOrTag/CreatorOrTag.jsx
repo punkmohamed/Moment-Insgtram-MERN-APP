@@ -7,7 +7,7 @@ import MyProfile from '../profile/MyProfile';
 import useUser from '../../hooks/useUser';
 
 const CreatorOrTag = () => {
-  const { userImg } = useUser()
+  const { userImg, user } = useUser()
   const { name } = useParams();
   const dispatch = useDispatch();
   const { posts, isLoading } = useSelector((state) => state.posts);
@@ -18,8 +18,9 @@ const CreatorOrTag = () => {
       dispatch(getPostsBySearch({ tags: name }));
     } else {
       dispatch(getPostsByCreator(name));
+
     }
-  }, [dispatch, location.pathname, name, userImg]);
+  }, [dispatch, location.pathname, name, userImg, user]);
 
   if (!posts.length && !isLoading) return 'No posts';
 
