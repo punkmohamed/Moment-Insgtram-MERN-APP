@@ -17,7 +17,7 @@ const AccountTable = ({ images, search }) => {
                     ? search?.map((user, index) => {
                         const imageUrl = images[index % images.length];
                         return (
-                            <div className="flex items-center bg-white rounded-lg shadow-md overflow-hidden" key={index}>
+                            <div className=" relative flex items-center bg-white rounded-lg shadow-md overflow-hidden" key={index}>
                                 <img
                                     className="h-32 w-48 object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
                                     src={imageUrl}
@@ -25,7 +25,7 @@ const AccountTable = ({ images, search }) => {
                                 />
                                 <div className="flex-1 p-4 flex flex-col sm:flex-row items-center sm:items-start justify-between">
                                     <div className="flex items-center">
-                                        <div className="relative -mx-18 w-16 h-16 sm:w-20 sm:h-20 mr-4">
+                                        <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 mr-4 absolute left-4 sm:left-6 md:left-10">
                                             <img
                                                 className="w-full h-full object-cover rounded-full ring-4 ring-white"
                                                 src={user.imageUrl || avatar}

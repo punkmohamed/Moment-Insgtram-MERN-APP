@@ -8,7 +8,7 @@ import images4 from "../../assets/istockphoto-1213934035-612x612.jpg"
 import images5 from "../../assets/subhome-ai.jpg"
 const AccountCard = ({ search, images }) => {
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-14">
             {search && search.length > 0
                 ? search?.map((user, index) => {
                     const imageUrl = images[index % images.length];

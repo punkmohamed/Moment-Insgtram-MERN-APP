@@ -40,7 +40,6 @@ const Accounts = () => {
 
     return (
         <>
-
             <div className="bg-yellow-400 rounded-lg mt-5 " style={{ backgroundImage: `url(${people})` }}>
                 <div className="h-3" >
                     <div className="text-white w-96 flex justify-center items-center">
@@ -92,6 +91,7 @@ const Accounts = () => {
                 <i className="fa-solid fa-list-ul"></i>
             </div>
             <div className="mt-10">
+
                 {!display
                     ? <AccountCard images={images} searchValue={searchValue} search={search} />
                     : <AccountTable images={images} searchValue={searchValue} search={search} />

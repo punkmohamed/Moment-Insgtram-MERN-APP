@@ -6,6 +6,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getPost, getPostsBySearch } from '../../actions/posts';
 import CommentSection from './CommentSection';
 import './styles.css';
+import PostDetailsLoader from '../Loaders/PostDetailsLoader';
 
 const Post = () => {
   const { post, posts, isLoading } = useSelector((state) => state.posts);
@@ -23,21 +24,16 @@ const Post = () => {
     }
   }, [post]);
 
-  if (!post) return null;
-  console.log(post);
-
   const openPost = (_id) => history(`/posts/${_id}`);
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-blue-500"></div>
-      </div>
-    );
-  }
 
-  const recommendedPosts = posts.filter(({ _id }) => _id !== post._id);
 
+
+  const recommendedPosts = posts.filter(({ _id }) => _id !== post?._id);
+
+  if (isLoading)
+    return <PostDetailsLoader />
+  if (!post) return <PostDetailsLoader />
   return (
     <div className="m-20 p-6 max-w-6xl mx-auto bg-white rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-2 items-center gap-6">
 

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
-import { likePost, deletePost } from '../../../actions/posts';
+import { likePost, deletePost, getUserCommentedPosts, getUserLikedPosts } from '../../../actions/posts';
 import './styles.css';
 import { Modal, Button } from 'flowbite-react';
 import CommentSection from '../../PostDetails/CommentSection';
@@ -22,6 +22,10 @@ const Post = ({ post, setCurrentId, setPostModal }) => {
     dispatch(deletePost(post._id));
     setShowModal(false);
     setOpen(false);
+    // if (user?.result?._id) {
+    //   dispatch(getUserCommentedPosts(user?.result?._id));
+    //   dispatch(getUserLikedPosts(user?.result?._id));
+    // }
   };
   const handleToggleOpen = () => {
     setOpen(!open);
@@ -41,6 +45,7 @@ const Post = ({ post, setCurrentId, setPostModal }) => {
     } else {
       setLikes([...post.likes, userId]);
     }
+
   };
 
   // const Likes = () => {
@@ -127,11 +132,11 @@ const Post = ({ post, setCurrentId, setPostModal }) => {
             <div className="flex space-x-1 items-center">
               <button onClick={handleLike} className="flex items-center space-x-1">
                 <span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${post.likes.includes(user?.result?.googleId || user?.result?._id) ? 'text-red-500' : 'text-gray-500'} hover:text-red-400 transition duration-100 cursor-pointer`} viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${post?.likes?.includes(user?.result?.googleId || user?.result?._id) ? 'text-red-500' : 'text-gray-500'} hover:text-red-400 transition duration-100 cursor-pointer`} viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                   </svg>
                 </span>
-                <span>{post.likes.length}</span>
+                <span>{post?.likes?.length}</span>
               </button>
             </div>
             <div>

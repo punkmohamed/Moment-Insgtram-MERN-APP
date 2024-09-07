@@ -1,4 +1,4 @@
-import { START_LOADING, END_LOADING, FETCH_ALL, FETCH_POST, FETCH_BY_SEARCH, FETCH_BY_LIKED, CREATE, UPDATE, DELETE, LIKE, COMMENT, FETCH_BY_CREATOR } from '../constants/actionTypes';
+import { START_LOADING, END_LOADING, FETCH_ALL, FETCH_POST, FETCH_BY_COMMENTED, FETCH_BY_SEARCH, FETCH_BY_LIKED, CREATE, UPDATE, DELETE, LIKE, COMMENT, FETCH_BY_CREATOR } from '../constants/actionTypes';
 import * as api from '../api/index.js';
 
 export const getPost = (id) => async (dispatch) => {
@@ -38,10 +38,21 @@ export const getPostsByCreator = (name) => async (dispatch) => {
 };
 export const getUserLikedPosts = (id) => async (dispatch) => {
   try {
-    console.log('User ID:', id);
+
     dispatch({ type: START_LOADING });
     const { data: { data } } = await api.getUserLikedPosts(id);
     dispatch({ type: FETCH_BY_LIKED, payload: { data } });
+    dispatch({ type: END_LOADING });
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getUserCommentedPosts = (id) => async (dispatch) => {
+  try {
+
+    dispatch({ type: START_LOADING });
+    const { data: { data } } = await api.getUserCommentedPosts(id);
+    dispatch({ type: FETCH_BY_COMMENTED, payload: { data } });
     dispatch({ type: END_LOADING });
   } catch (error) {
     console.log(error);
@@ -73,7 +84,7 @@ export const createPost = (post, history) => async (dispatch) => {
   }
 };
 
-export const updatePost = (id, post) => async (dispatch) => {
+export const updatePost = (id, post, history) => async (dispatch) => {
   try {
     const { data } = await api.updatePost(id, post);
     dispatch({ type: UPDATE, payload: data });
@@ -95,9 +106,9 @@ export const likePost = (id) => async (dispatch) => {
   }
 };
 
-export const commentPost = (value, id) => async (dispatch) => {
+export const commentPost = (value, id, user) => async (dispatch) => {
   try {
-    const { data } = await api.comment(value, id);
+    const { data } = await api.comment(value, id, user);
 
     dispatch({ type: COMMENT, payload: data });
 

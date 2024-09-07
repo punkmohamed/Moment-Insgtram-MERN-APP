@@ -1,6 +1,6 @@
-import { FETCH_ALL, FETCH_BY_LIKED, FETCH_BY_SEARCH, FETCH_BY_CREATOR, FETCH_POST, CREATE, UPDATE, DELETE, LIKE, COMMENT } from '../constants/actionTypes';
+import { FETCH_ALL, FETCH_BY_LIKED, FETCH_BY_SEARCH, FETCH_BY_COMMENTED, FETCH_BY_CREATOR, FETCH_POST, CREATE, UPDATE, DELETE, LIKE, COMMENT } from '../constants/actionTypes';
 
-export default (state = { isLoading: true, posts: [] }, action) => {
+export default (state = { isLoading: true, posts: [], likedPosts: [], commentedPosts: [] }, action) => {
   switch (action.type) {
     case 'START_LOADING':
       return { ...state, isLoading: true };
@@ -18,10 +18,20 @@ export default (state = { isLoading: true, posts: [] }, action) => {
       return { ...state, posts: action.payload.data };
     case FETCH_BY_LIKED:
       return { ...state, likedPosts: action.payload.data };
+    case FETCH_BY_COMMENTED:
+      return { ...state, commentedPosts: action.payload.data };
     case FETCH_POST:
       return { ...state, post: action.payload.post };
     case LIKE:
-      return { ...state, posts: state.posts.map((post) => (post._id === action.payload._id ? action.payload : post)) };
+      return {
+        ...state,
+        posts: state.posts.map((post) =>
+          post._id === action.payload._id ? action.payload : post
+        ),
+        likedPosts: state.likedPosts.some((post) => post._id === action.payload._id)
+          ? state.likedPosts.filter((post) => post._id !== action.payload._id)
+          : [...state.likedPosts, action.payload]
+      };
     case COMMENT:
       return {
         ...state,
@@ -34,7 +44,11 @@ export default (state = { isLoading: true, posts: [] }, action) => {
     case UPDATE:
       return { ...state, posts: state.posts.map((post) => (post._id === action.payload._id ? action.payload : post)) };
     case DELETE:
-      return { ...state, posts: state.posts.filter((post) => post._id !== action.payload) };
+      return {
+        ...state, posts: state.posts.filter((post) => post._id !== action.payload),
+        likedPosts: state.likedPosts.filter((post) => post._id !== action.payload),
+        commentedPosts: state.commentedPosts.filter((post) => post._id !== action.payload),
+      };
     default:
       return state;
   }

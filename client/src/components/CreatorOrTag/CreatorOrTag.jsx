@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getPostsByCreator, getPostsBySearch } from '../../actions/posts';
 import MyProfile from '../profile/MyProfile';
 import useUser from '../../hooks/useUser';
+import { userList } from '../../actions/auth';
 
 const CreatorOrTag = () => {
   const { userImg, user } = useUser()
@@ -22,11 +23,22 @@ const CreatorOrTag = () => {
     }
   }, [dispatch, location.pathname, name, userImg, user]);
 
-  if (!posts.length && !isLoading) return 'No posts';
+  const users = useSelector((state) => state.auth.userList || []);
+  const userId = useMemo(() => {
+    return users?.users?.find((user) => user?.name === name)?._id;
+  }, [users, name]);
+
+  useEffect(() => {
+    dispatch(userList());
+  }, [dispatch]);
+
+
+
+
 
   return (
     <>
-      <MyProfile />
+      {userId && <MyProfile userId={userId} />}
     </>
     // <div className="p-6">
     //   <h2 className="text-3xl font-bold mb-6">{name}</h2>

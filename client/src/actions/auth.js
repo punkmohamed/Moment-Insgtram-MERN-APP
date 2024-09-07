@@ -15,7 +15,6 @@ export const signin = (formData, router) => async (dispatch) => {
 export const userList = () => async (dispatch) => {
   try {
     const { data } = await api.userList();
-    console.log('Fetched user list:', data);
     dispatch({ type: actionType.FETCH_USERS, payload: data });
   } catch (error) {
     console.log(error);

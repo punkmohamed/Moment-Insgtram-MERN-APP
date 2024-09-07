@@ -8,12 +8,9 @@ export const getPosts = async (req, res) => {
     try {
         const LIMIT = 8;
         const startIndex = (Number(page) - 1) * LIMIT
-
         const total = await PostMessage.countDocuments({});
         const posts = await PostMessage.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex).populate('creator', 'name imageUrl')
-
-
-
+            .populate('comments.user', 'name imageUrl');
         res.json({ data: posts, currentPage: Number(page), numberOfPages: Math.ceil(total / LIMIT) });
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -35,7 +32,7 @@ export const getPostsBySearch = async (req, res) => {
 export const getPostsByCreator = async (req, res) => {
     const { name } = req.query;
     try {
-        const posts = await PostMessage.find({ name }).populate('creator', 'name imageUrl')
+        const posts = await PostMessage.find({ name }).populate('creator', 'name imageUrl').populate('comments.user', 'name imageUrl');
         res.json({ data: posts });
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -44,7 +41,16 @@ export const getPostsByCreator = async (req, res) => {
 export const getUserLikedPosts = async (req, res) => {
     const { id } = req.params;
     try {
-        const posts = await PostMessage.find({ likes: id }).populate('creator', 'name imageUrl')
+        const posts = await PostMessage.find({ likes: id }).populate('creator', 'name imageUrl').populate('comments.user', 'name imageUrl');
+        res.json({ data: posts });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+export const getUserCommentedPosts = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const posts = await PostMessage.find({ 'comments.user': id }).populate('creator', 'name imageUrl').populate('comments.user', 'name imageUrl');
         res.json({ data: posts });
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -55,7 +61,7 @@ export const getPost = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const post = await PostMessage.findById(id).populate('creator', 'name imageUrl')
+        const post = await PostMessage.findById(id).populate('creator', 'name imageUrl').populate('comments.user', 'name imageUrl');
 
         res.status(200).json(post);
     } catch (error) {
@@ -85,7 +91,7 @@ export const updatePost = async (req, res) => {
 
     const updatedPost = { creator, title, message, tags, selectedFile, _id: id };
 
-    await PostMessage.findByIdAndUpdate(id, updatedPost, { new: true });
+    await PostMessage.findByIdAndUpdate(id, updatedPost, { new: true }).populate('creator', 'name imageUrl').populate('comments.user', 'name imageUrl');
 
     res.json(updatedPost);
 }
@@ -109,7 +115,7 @@ export const likePost = async (req, res) => {
 
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
 
-    const post = await PostMessage.findById(id).populate('creator', 'name imageUrl')
+    const post = await PostMessage.findById(id).populate('creator', 'name imageUrl').populate('comments.user', 'name imageUrl');
 
     const index = post.likes.findIndex((id) => id === String(req.userId));
 
@@ -119,21 +125,24 @@ export const likePost = async (req, res) => {
         post.likes = post.likes.filter((id) => id !== String(req.userId));
     }
 
-    const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true }).populate('creator', 'name imageUrl')
+    const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true }).populate('creator', 'name imageUrl').populate('comments.user', 'name imageUrl');
 
     res.status(200).json(updatedPost);
 }
 
 export const commentPost = async (req, res) => {
     const { id } = req.params;
-    const { comment } = req.body;
+    const { comment, user } = req.body;
 
     try {
         const post = await PostMessage.findById(id);
-        post.comments.push(comment);
-
-        const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true });
-
+        const commentData = {
+            user: user?.result?._id,
+            message: comment.message,
+            selectedFile: comment.selectedFile,
+        };
+        post.comments.push(commentData);
+        const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true }).populate('creator', 'name imageUrl').populate('comments.user', 'name imageUrl');
         res.json(updatedPost);
     } catch (error) {
         res.status(500).json({ message: "Something went wrong" });

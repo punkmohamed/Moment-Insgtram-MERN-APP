@@ -11,6 +11,7 @@ const Posts = ({ setCurrentId, setPostModal }) => {
   const { userImg } = useUser();
   const dispatch = useDispatch();
   const { posts, isLoading } = useSelector((state) => state.posts);
+  console.log(posts);
 
   useEffect(() => {
 

@@ -33,6 +33,8 @@ const Form = ({ currentId, setCurrentId, setPostModal, postModal }) => {
       clear();
     } else {
       dispatch(updatePost(currentId, { ...postData, name: user?.result?.name }, history));
+      console.log(history);
+
       setPostModal(false)
       clear();
     }
