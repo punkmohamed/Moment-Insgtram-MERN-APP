@@ -11,6 +11,7 @@ const Form = ({ currentId, setCurrentId, setPostModal, postModal }) => {
   const [postData, setPostData] = useState({ title: '', message: '', tags: [], selectedFile: '' });
   const post = useSelector((state) => (currentId ? state.posts.posts.find((message) => message._id === currentId) : null));
   const dispatch = useDispatch();
+  const [tagInput, setTagInput] = useState('');
   const user = JSON.parse(localStorage.getItem('profile'));
   const history = useNavigate();
 
@@ -42,8 +43,22 @@ const Form = ({ currentId, setCurrentId, setPostModal, postModal }) => {
   const handlePost = () => {
     setPostModal(true)
     setCurrentId(0)
-
   }
+  const handleAddChip = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+
+      if (tagInput.trim()) {
+        setPostData({ ...postData, tags: [...postData.tags, tagInput.trim()] });
+        setTagInput('');
+      }
+    }
+  };
+
+  const handleDeleteChip = (chipToDelete) => {
+    setPostData({ ...postData, tags: postData.tags.filter((tag) => tag !== chipToDelete) });
+  };
+
   if (!user?.result?.name) {
     return (
       <div className="p-4 max-w-md mx-auto bg-white shadow-lg rounded-lg">
@@ -93,6 +108,28 @@ const Form = ({ currentId, setCurrentId, setPostModal, postModal }) => {
                     value={postData.message}
                     onChange={(e) => setPostData({ ...postData, message: e.target.value })}
                   />
+                </div>
+                <label htmlFor="tags" className="block text-gray-700">Tags</label>
+                <input
+                  id="tags"
+                  name="tags"
+                  type="text"
+                  placeholder="Press enter to add a tag"
+                  className="w-full p-2 border rounded-lg"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={handleAddChip}
+                />
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {postData.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="bg-blue-200 text-blue-700 p-2 rounded-full cursor-pointer"
+                      onClick={() => handleDeleteChip(tag)}
+                    >
+                      {tag} &times;
+                    </span>
+                  ))}
                 </div>
                 <div className="mb-4">
                   <FileBase type="file" multiple={false} onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} />

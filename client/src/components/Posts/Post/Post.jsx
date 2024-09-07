@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import { likePost, deletePost, getUserCommentedPosts, getUserLikedPosts } from '../../../actions/posts';
@@ -8,6 +8,7 @@ import './styles.css';
 import { Modal, Button } from 'flowbite-react';
 import CommentSection from '../../PostDetails/CommentSection';
 import ItemComponent from '../../Accounts/ItemComponents';
+import { userList } from '../../../api';
 
 const Post = ({ post, setCurrentId, setPostModal }) => {
   const user = JSON.parse(localStorage.getItem('profile'));
@@ -48,6 +49,16 @@ const Post = ({ post, setCurrentId, setPostModal }) => {
 
   };
 
+  const users = useSelector((state) => state.auth.userList || []);
+  const likedUserIds = post?.likes || [];
+
+  const likedUserIdSet = new Set(likedUserIds);
+
+
+  const usersWhoLiked = users?.users?.filter((user) => likedUserIdSet.has(user._id)).reverse() || [];
+
+  console.log(usersWhoLiked, "usersWhoLiked");
+
   // const Likes = () => {
   //   if (likes.length > 0) {
   //     return likes.find((like) => like === userId)
@@ -71,6 +82,24 @@ const Post = ({ post, setCurrentId, setPostModal }) => {
 
       <div className="max-w-sm w-full bg-white rounded-xl shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl overflow-hidden">
         <div className="relative p-4">
+          {usersWhoLiked?.length > 0 && (
+            <div className="flex -space-x-4 rtl:space-x-reverse">
+              {usersWhoLiked?.slice(0, 3).map((user, index) => (
+                <img
+                  key={index}
+                  className="w-10 h-10 border-2 border-white rounded-full dark:border-gray-800"
+                  src={user?.imageUrl}
+                  alt={`User ${index + 1}`}
+                />
+              ))}
+              {usersWhoLiked.length > 3 && (
+                <span className="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-gray-700 border-2 border-white rounded-full hover:bg-gray-600 dark:border-gray-800">
+                  +{usersWhoLiked.length - 3}
+                </span>
+              )}
+            </div>
+          )}
+
           <span className='text-stone-400'>{moment(post.createdAt).fromNow()}</span>
           <span className="text-white text-xs font-bold rounded-lg bg-green-500 
           inline-block mt-4 ml-4 py-1.5 px-4 cursor-pointer">Home</span>

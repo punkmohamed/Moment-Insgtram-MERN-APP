@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import usePost from '../../hooks/usePost';
 import useUser from '../../hooks/useUser';
 import RightMembers from './../RightMembers/RightMembers';
+import { Badge } from 'flowbite-react';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -40,8 +41,18 @@ const Home = () => {
     }
   };
 
+  const handleDeleteChip = (chipToDelete) => setTags(tags.filter((tag) => tag !== chipToDelete));
+  const handleAddChip = (e) => {
+    if (e.key === 'Enter' && e.target.value.trim()) {
+      setTags([...tags, e.target.value.trim()]);
+      e.target.value = '';
+    }
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
+
       <div className='mx-auto w-100'>
         <div className='border-t-4 border-t-emerald-700 p-4 bg-white'>
           <div className='flex justify-between items-center'>
@@ -76,7 +87,29 @@ const Home = () => {
             >
               Search
             </button>
+            <div className="flex flex-wrap gap-2 mb-2 mt-4">
+              {tags.map((tag, index) => (
+                <Badge key={index} color="info" className="cursor-pointer p-2 font-bold text-sm" onClick={() => handleDeleteChip(tag)}>
+                  {typeof tag === 'string' ? tag : JSON.stringify(tag)} &times;
+                </Badge>
+              ))}
+            </div>
+
+            <input
+              type="text"
+              placeholder="Add tags"
+              onKeyDown={handleAddChip}
+              className="w-full p-2 border rounded-lg"
+            />
+            <button
+              onClick={searchPost}
+              className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 mt-4"
+            >
+              Search
+            </button>
+
           </div>
+
           <RightMembers />
           {(!searchQuery && !tags.length) && (
             <div className="bg-white shadow-md rounded-lg p-4 mt-4">
@@ -85,7 +118,7 @@ const Home = () => {
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

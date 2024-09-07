@@ -65,7 +65,17 @@ const Post = () => {
             </p>
           </div>
         </div>
-
+        <div className="mb-4 text-gray-600 text-lg font-semibold">
+          {post?.tags.map((tag) => (
+            <Link
+              to={`/tags/${tag}`}
+              key={tag}
+              className="text-blue-500 hover:text-blue-700 underline mr-2"
+            >
+              {`#${tag}`}
+            </Link>
+          ))}
+        </div>
         <p className="mt-4 text-gray-600 break-words max-w-md">
           {post.message}
         </p>
