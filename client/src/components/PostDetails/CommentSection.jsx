@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import EmojiMart from '@emoji-mart/react';
-import { commentPost, getUserCommentedPosts } from '../../actions/posts';
+import { commentPost } from '../../actions/posts';
 import './styles.css';
 import FileBase from 'react-file-base64';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import socket from '../../socket.io/socket';
 const CommentSection = ({ post }) => {
   const user = JSON.parse(localStorage.getItem('profile'));
-  const [loading, setLoading] = useState(false)
   const [comment, setComment] = useState({ message: '', selectedFile: '' });
   const dispatch = useDispatch();
   const [comments, setComments] = useState(post?.comments);
@@ -24,26 +24,32 @@ const CommentSection = ({ post }) => {
     }
   }, [comments]);
 
+
+  useEffect(() => {
+    socket.on('postCommented', (newComment) => {
+      setComments((prevComments) => [...prevComments, newComment]);
+      commentsRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    return () => {
+      socket.off('postCommented');
+    };
+  }, []);
+
   const handleComment = async () => {
     try {
       const commentData = {
         message: comment.message,
         selectedFile: comment.selectedFile,
       };
-      const newComments = await dispatch(commentPost(commentData, post._id, user));
-      setComments(newComments);
+      await dispatch(commentPost(commentData, post._id, user));
       setComment({ message: '', selectedFile: '' });
-
-      commentsRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', });
-      // if (user?.result?._id) {
-      //   dispatch(getUserCommentedPosts(user?.result?._id));
-      // }
+      commentsRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch (error) {
-      console.error("Error adding comment:", error);
+      console.error('Error adding comment:', error);
     }
   };
 
-  console.log(comments, "commentead");
 
   const handleEmojiSelect = (emoji) => {
     setComment((prevComment) => ({

@@ -7,11 +7,20 @@ import useUser from '../../hooks/useUser';
 import { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import AutoUserSearch from '../AutoUserSearch/AutoUserSearch';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBell, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import ChatNotifictions from '../Notifictions/ChatNotifictions';
+import Notifictions from '../Notifictions/Notifictions';
+import socket from '../../socket.io/socket';
+
 
 const Navbar = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+  const [notifications, setNotifications] = useState([]);
   const { logout, userImg } = useUser();
   const [showPopover, setShowPopover] = useState(false);
+  const [showPopoverr, setShowPopoverr] = useState(false);
+
   useEffect(() => {
     const token = user?.token;
     const tokenCheckTimeout = setTimeout(() => {
@@ -32,14 +41,37 @@ const Navbar = () => {
     return () => clearTimeout(tokenCheckTimeout);
   }, [userImg, user, logout]);
 
+
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem('profile')));
+    socket.emit('register', user?.result?._id);
+
   }, [userImg]);
+  const handleNotifictions = () => {
+    setShowPopoverr((prev) => !prev)
+    setShowPopover(false)
+  }
+  const handleNotifictionsMesg = () => {
+    setShowPopover((prev) => !prev)
+    setShowPopoverr(false)
+  }
+
+
+  useEffect(() => {
+    socket.on('notifications', (notification) => {
+      setNotifications((prevNotifications) => [...prevNotifications, notification]);
+    });
+    return (() => {
+      socket.off('notifications')
+    })
+  }, []);
+  console.log(notifications, 'notifications');
 
   return (
     <header className="bg-white shadow-md">
       {/* Top Navigation */}
       <nav className="hidden sm:flex items-center justify-between p-4">
+
         <div className='flex items-center space-x-10'>
           <Link to="/" className="flex items-center">
             <img src={memoriesText} alt="Memories Text" className="h-11 mr-2" />
@@ -74,6 +106,25 @@ const Navbar = () => {
                 <Link to={`/profile/${user?.result.name}`}>
                   <span className="ml-2 text-lg font-semibold">{user?.result.name}</span>
                 </Link>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="relative" onClick={handleNotifictions}>
+                  <FontAwesomeIcon icon={faBell} className="text-2xl cursor-pointer" />
+                  {notifications.length > 0 &&
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">{notifications.length}</span>
+                  }
+                </div>
+
+                <div className="relative" onClick={handleNotifictionsMesg}>
+                  <FontAwesomeIcon icon={faEnvelope} className="text-2xl cursor-pointer" />
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">{3}</span>
+                </div>
+              </div>
+              <div className='absolute top-25 right-44 z-50'>
+                {showPopover && <ChatNotifictions />}
+              </div>
+              <div className='absolute top-30 right-50 z-50'>
+                {showPopoverr && <Notifictions notifications={notifications} />}
               </div>
               <button
                 className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"

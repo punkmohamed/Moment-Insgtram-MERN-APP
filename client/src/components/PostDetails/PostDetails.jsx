@@ -65,7 +65,10 @@ const Post = () => {
             </p>
           </div>
         </div>
-        <div className="mb-4 text-gray-600 text-lg font-semibold">
+        <p className="mt-4 text-gray-600 break-words max-w-md">
+          {post.title}
+        </p>
+        <div className="my-2 text-gray-600 text-lg font-semibold">
           {post?.tags.map((tag) => (
             <Link
               to={`/tags/${tag}`}

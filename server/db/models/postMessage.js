@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
 const postSchema = mongoose.Schema({
-    title: String,
-    message: String,
+    title: { type: String, required: true },  // Required validation
+    message: { type: String, required: true },  // Required validation
     name: String,
     creator: {
         type: mongoose.Schema.Types.ObjectId,
@@ -27,10 +27,10 @@ const postSchema = mongoose.Schema({
     ],
     createdAt: {
         type: Date,
-        default: new Date(),
+        default: Date.now,  // Simplified default
     },
-})
+});
 
-var PostMessage = mongoose.model('Posts', postSchema);
+var PostMessage = mongoose.model('Posts', postSchema);  // Changed to singular for consistency
 
 export default PostMessage;

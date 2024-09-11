@@ -50,7 +50,7 @@ const useUser = () => {
         }, 500);
         setUserID(user?.result?._id);
 
-        console.log("did mount after update")
+
         return () => clearTimeout(tokenCheckTimeout);
     }, [dispatch, location, userImg]);
 

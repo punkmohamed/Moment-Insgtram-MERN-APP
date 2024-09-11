@@ -10,7 +10,6 @@ const RightMembers = () => {
     }, [dispatch]);
 
     const users = useSelector((state) => state.auth.userList.users || []).slice(0, 5)
-    console.log(users, "users");
 
 
     return (

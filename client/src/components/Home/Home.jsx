@@ -10,6 +10,7 @@ import usePost from '../../hooks/usePost';
 import useUser from '../../hooks/useUser';
 import RightMembers from './../RightMembers/RightMembers';
 import { Badge } from 'flowbite-react';
+import ChatNotifictions from '../Notifictions/ChatNotifictions';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
